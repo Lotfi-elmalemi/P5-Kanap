@@ -32,3 +32,13 @@ let displayProduct = function () {
     });
 };
 displayProduct();
+
+function quantityValue() {
+  let quantity = document.getElementById("quantity");
+  return quantity.value;
+}
+
+function colorValue() {
+  let color = document.getElementById("colors");
+  return color.value;
+}
