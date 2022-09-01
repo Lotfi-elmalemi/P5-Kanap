@@ -1,10 +1,11 @@
+// 
 const string = window.location;
 const url = new URL(string);
 const id = url.searchParams.get("id");
 const host = "http://localhost:3000/";
 const objectURL = host + "api/products/" + id;
 
-
+  // decrirre la fonction
 let displayProduct = function () {
   fetch(objectURL)
     .then((response) => response.json())
@@ -35,10 +36,52 @@ displayProduct();
 
 function quantityValue() {
   let quantity = document.getElementById("quantity");
-  return quantity.value;
+  return parseInt(quantity.value);
 }
 
 function colorValue() {
   let color = document.getElementById("colors");
   return color.value;
 }
+
+console.log(quantityValue());
+console.log(colorValue());
+
+const toCartBtn = document.getElementById("addToCart");
+
+toCartBtn.addEventListener("click", () => {
+  let qty = quantityValue();
+  let color = colorValue();
+  addToCart(id, color, qty);
+});
+
+function getCart() {
+  let items = [];
+  if (localStorage.getItem("panier") != null) {
+    items = JSON.parse(localStorage.getItem("panier"));
+  }
+  return items;
+}
+
+function saveCart() {
+  localStorage.setItem("panier", JSON.stringify(panier))
+  }
+
+
+function addToCart(id, color, qty) {
+  let cartInfo = {
+    id : id,
+    color: color,
+    qty : qty,
+  }
+  let cart = getCart();
+  
+  //let foundProduct = cart.find(p => p.id == product.id);
+  console.log(cart);
+  //if (foundProduct != undefined) {
+  //foundProduct.quantity++;
+  //} else {
+  console.log(quantity.value);
+  localStorage.setItem("panier", JSON.stringify(cartInfo));
+  }
+
