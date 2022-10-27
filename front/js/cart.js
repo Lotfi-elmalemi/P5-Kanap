@@ -49,24 +49,31 @@ let quantityNumber = parseInt(productInLocalStorage[i].qty);
 totalQuantity += parseInt(productInLocalStorage[i].qty);
 document.querySelector("#totalQuantity").textContent = totalQuantity;
 //console.log(totalQuantity);
-//let price = parseInt(dataProduct[i].price);
-//totalPrice += parseInt(dataProduct[i].price * productInLocalStorage[i].qty);
-//document.querySelector("#totalPrice").textContent = totalPrice;
- 
-let deleteItem = () => {
-    let buttons = document.querySelectorAll('.deleteItem');
-    console.log(buttons);
-    for (let button of buttons) {
-        button.addEventListener("click", e => {
-            let canapeId = e.target.getAttribute("canapeId");
-            let canapeColor = e.target.getAttribute("canapeColor");
-            const searchDeleteItem = productInLocalStorage.find(element => element.id == canapeId && element.color == canapeColor);
-            productInLocalStorage = productInLocalStorage.filter(item => item != searchDeleteItem);
-            localStorage.removeItem("Canape", JSON.stringify(productInLocalStorage));
-            window.location.href = "cart.html";
-        });
-    }
+function totalPrice() {
+let price = parseInt(dataProduct.price * productInLocalStorage[i].qty);
+console.log(price);
+//console.log(additionPrice)
+let additionPrice = price;
+additionPrice += parseInt(price);
+//console.log(additionPrice)
+document.querySelector("#totalPrice").textContent = additionPrice;
 }
+totalPrice();
+
+     function deleteItem() {
+         let buttons = document.querySelectorAll('.deleteItem');
+         console.log(buttons);
+         for (let button of buttons) {
+             button.addEventListener("click", e => {
+                 let canapeId = e.target.getAttribute("canapeId");
+                 let canapeColor = e.target.getAttribute("canapeColor");
+                 const searchDeleteItem = productInLocalStorage.find(element => element.id == canapeId && element.color == canapeColor);
+                 productInLocalStorage = productInLocalStorage.filter(item => item != searchDeleteItem);
+                 localStorage.setItem("panier", JSON.stringify(productInLocalStorage));
+                 window.location.href = "cart.html";
+             });
+         }
+     }
 deleteItem();
 function modifyQuantity() {
     let inputs = document.querySelectorAll('.itemQuantity');
@@ -78,7 +85,7 @@ function modifyQuantity() {
           console.log(modify)
           modify.qty = input.value;
           productInlocalStorage = modify;
-          localStorage.setItem("Canape", JSON.stringify(productInLocalStorage));
+          localStorage.setItem("panier", JSON.stringify(productInLocalStorage));
           window.location.href = "cart.html";
       })
     }
