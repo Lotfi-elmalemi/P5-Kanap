@@ -9,6 +9,7 @@ let displayCards = function () {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+        totalPrice(data);
         let foundProduct = function(id) {
             return data.find((product) => product._id === id)
         }
@@ -44,21 +45,12 @@ let displayCards = function () {
                                                                         </div>
                                                                     </div>
                                                                 </article>`;                                                     
-let quantityNumber = parseInt(productInLocalStorage[i].qty);
+
 //console.log(quantityNumber)
 totalQuantity += parseInt(productInLocalStorage[i].qty);
 document.querySelector("#totalQuantity").textContent = totalQuantity;
 //console.log(totalQuantity);
-function totalPrice() {
-let price = parseInt(dataProduct.price * productInLocalStorage[i].qty);
-console.log(price);
-//console.log(additionPrice)
-let additionPrice = price;
-additionPrice += parseInt(price);
-//console.log(additionPrice)
-document.querySelector("#totalPrice").textContent = additionPrice;
-}
-totalPrice();
+
 
      function deleteItem() {
          let buttons = document.querySelectorAll('.deleteItem');
@@ -83,7 +75,7 @@ function modifyQuantity() {
           let canapeColor = event.target.getAttribute("canapeColor");
           const modify = productInLocalStorage.find(element => element.id == canapeId && element.color == canapeColor);
           console.log(modify)
-          modify.qty = input.value;
+          modify.qty = parseInt(input.value);
           productInlocalStorage = modify;
           localStorage.setItem("panier", JSON.stringify(productInLocalStorage));
           window.location.href = "cart.html";
@@ -97,6 +89,27 @@ modifyQuantity();
 }
 displayCards();
 
+
+function totalPrice() {
+      fetch(getUrl)
+      .then((response) => response.json())
+      .then((data) => {
+    function foundProduct(id) {
+            return data.find((product) => product._id === id);
+        } 
+    for (i = 0 ; i < productInLocalStorage.length ; i++) {
+    let id = productInLocalStorage[i].id
+    let dataProduct = foundProduct(id)
+    let price = parseInt(dataProduct.price * productInLocalStorage[i].qty);
+    console.log(price);
+    let additionPrice = price;
+    additionPrice += parseInt(price);
+    //console.log(additionPrice)
+    document.querySelector("#totalPrice").textContent = additionPrice;
+    }})
+}
+
+totalPrice();
 
 //function modifyQuantity() {
 //    let inputs = document.querySelectorAll('.itemQuantity');
