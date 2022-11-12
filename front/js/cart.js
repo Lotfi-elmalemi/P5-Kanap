@@ -90,7 +90,8 @@ modifyQuantity();
 displayCards();
 
 
-function totalPrice() {
+function totalPrice(data) {
+    let totalOfPrice = 0;
       fetch(getUrl)
       .then((response) => response.json())
       .then((data) => {
@@ -100,16 +101,15 @@ function totalPrice() {
     for (i = 0 ; i < productInLocalStorage.length ; i++) {
     let id = productInLocalStorage[i].id
     let dataProduct = foundProduct(id)
-    let price = parseInt(dataProduct.price * productInLocalStorage[i].qty);
-    console.log(price);
-    let additionPrice = price;
-    additionPrice += parseInt(price);
+    totalOfPrice += parseInt(dataProduct.price * productInLocalStorage[i].qty);
+    console.log(totalOfPrice);
+    //let additionPrice = totalOfPrice;
+    //additionPrice += parseInt(totalOfPrice);
     //console.log(additionPrice)
-    document.querySelector("#totalPrice").textContent = additionPrice;
+    document.querySelector("#totalPrice").textContent = totalOfPrice;
     }})
 }
 
-totalPrice();
 
 //function modifyQuantity() {
 //    let inputs = document.querySelectorAll('.itemQuantity');
@@ -144,19 +144,81 @@ totalPrice();
 //  }
  
 // deleteItem();
+  var form  = document.getElementsByTagName('form')[0];
+  var firstName = document.getElementById('firstName');
+  var firstNameError = document.querySelector('.firstNameErrorMsg');
 
   let patternFirstName = document.querySelector("#firstName");
   patternFirstName.setAttribute("pattern", "[a-zA-Z-éèà' -]*");
-    
+  firstName.addEventListener("input", function (event) {
+    // Chaque fois que l'utilisateur saisit quelque chose
+    // on vérifie la validité du champ e-mail.
+    if (firstName.validity.valid) {
+      // S'il y a un message d'erreur affiché et que le champ
+      // est valide, on retire l'erreur
+      error.innerHTML = ""; // On réinitialise le contenu
+      error.className = "error"; // On réinitialise l'état visuel du message
+    }
+  }, false);
+  form.addEventListener("submit", function (event) {
+    // Chaque fois que l'utilisateur tente d'envoyer les données
+    // on vérifie que le champ email est valide.
+    if (!firstName.validity.valid) {
+  
+      // S'il est invalide, on affiche un message d'erreur personnalisé
+      error.innerHTML = "J'attends une adresse e-mail correcte, mon cher&nbsp;!";
+      error.className = "error active";
+      // Et on empêche l'envoi des données du formulaire
+      event.preventDefault();
+    }
+  }, false);
+
   let patternLastName = document.querySelector("#lastName");
   patternLastName.setAttribute("pattern", "[a-zA-Z-éèà' -]*");
-  
+
   let patternCity = document.querySelector("#city");
   patternCity.setAttribute("pattern", "[a-zA-Z-éèà' -]*");
 
   let patternEmail = document.querySelector("#email");
   patternEmail.setAttribute("pattern", "[a-zA-z-éèà-0-9' -@")
-
-
+  
+  let getId = productInLocalStorage.map(product => product.id);
+  document.querySelector(".cart__order__form__submit").addEventListener("click", function(e) {
+    e.preventDefault();
+    let valid = true;
+    for(let input of document.querySelectorAll(".cart__order__form__question input")) {
+    valid &= input.reportValidity();
+        if (!valid) {
+            break;
+        } 
+    }   
+    if (valid) {
+        const result = fetch("http://localhost:3000/api/products/order", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json', 
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contact: {
+                    firstName: document.getElementById("firstName").value,
+                    lastName: document.getElementById("lastName").value,
+                    address: document.getElementById("address").value,
+                    city: document.getElementById("city").value,
+                    email: document.getElementById("email").value
+                    },
+                products : getId
+            })
+        });
+        result.then(async (answer) => {
+            try {
+                const data = await answer.json();
+                window.location.href = `confirmation.html?id=${data.orderId}`;
+                localStorage.clear();
+            } catch (e) {
+            }
+        });
+    }
+})
 
 
