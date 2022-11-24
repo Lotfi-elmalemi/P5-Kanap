@@ -1,3 +1,3 @@
-let params = new URLSearchParams(window.location.search);
-const orderId = params.get("id");
-document.getElementById("orderId").innerHTML += `${orderId}`;
+let params = new URL(document.location).searchParams;
+let orderId = params.get("orderId");
+document.getElementById("orderId").textContent = orderId;

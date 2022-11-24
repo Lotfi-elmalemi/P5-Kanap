@@ -5,7 +5,7 @@ const id = url.searchParams.get("id");
 const host = "http://localhost:3000/";
 const objectURL = host + "api/products/" + id;
 
-  // decrirre la fonction
+  // Fonction permettant d'afficher les informations liées au produit sélectionné.
 let displayProduct = function () {
   fetch(objectURL)
     .then((response) => response.json())
@@ -34,11 +34,12 @@ let displayProduct = function () {
 };
 displayProduct();
 
+// Fonction permettant de stocker la quantité
 function quantityValue() {
   let quantity = document.getElementById("quantity");
   return parseInt(quantity.value);
 }
-
+// Fonction permettant de stocker la couleur
 function colorValue() {
   let color = document.getElementById("colors");
   return color.value;
@@ -49,14 +50,14 @@ console.log(colorValue());
 
 
 const toCartBtn = document.getElementById("addToCart");
-
+// Prise en compte de la quantité et de la couleurs sélectionné par l'utilisateur.
 toCartBtn.addEventListener("click", () => {
   let qty = quantityValue();
   let color = colorValue();
 
   addToCart(id, color, qty);
 });
-
+// Fonction permettant d'afficher la panier
 function getCart() {
   let items = [];
   if (localStorage.getItem("panier") != null) {
@@ -64,20 +65,20 @@ function getCart() {
   }
   return items;
 }
-
+// Fonction permettant de sauvegarder le panier
 function saveCart() {
   localStorage.setItem("panier", JSON.stringify(panier))
   } 
 
 
-
+// Fonction permettant d'ajouter au panier l'id, la couleur et la quantité du produit.
 function addToCart(id, color, qty) {
   let cartInfo = {
     id : id,
     color: color,
     qty : qty
   }
-
+// Condition pour panier si même Id mais couleur différentes création d'une nouvelle entrée dans le panier sinon ajout d'une quantité supplémentaire.
  let productInLocalStorage = JSON.parse(localStorage.getItem("panier"));
     if (productInLocalStorage === null) {
         productInLocalStorage= [];

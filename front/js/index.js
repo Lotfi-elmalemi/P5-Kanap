@@ -1,12 +1,12 @@
 const host = "http://localhost:3000/";
 const getUrl = host + "api/products/";
-///* Décrire la function
+///* Fonction permettant de récuperer les informations sur les produits présent dans l'api
 let displayCards = function () {
   fetch(getUrl)
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
-//* Décrire la boucle
+//* Boucle affichant sur le DOM l'enssemble des produits présent dans l'api
       let productSection = document.getElementById("items");
 
       for (i = 0; i < data.length; i++) {
